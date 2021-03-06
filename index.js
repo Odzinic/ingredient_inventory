@@ -1,11 +1,11 @@
 require('dotenv').config();
-var express = require('express');
-const bodyParser = require('body-parser');
-var api_routes = require('./GET/GetRoutes.js');
+let express = require('express');
+let bodyParser = require('body-parser');
+let api_routes = require('./GET/GetRoutes.js');
 
 
 
-var app = express();
+let app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -21,12 +21,6 @@ app.use(function (req, res, next) {
 
 // Middleware - Serve static files from the specified directory (Not used in production with IIS as web.config takes care of it).
 app.use(express.static(__dirname + '/src')); //could also change to '/build' for staging tests
-
-app.get("/whatever", function (req, res) {
-
-    res.send("Response worked.");
-});
-
 
 app.use("/", api_routes);
 

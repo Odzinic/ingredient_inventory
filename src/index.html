@@ -8,24 +8,33 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     </head>
 <body>
-<Button id="btnSave">Save Ingredients</Button>
-<Button id="btnClear">Cart</Button>
+<button type="button" id="btnSave" class="btn btn-primary">Save Ingredients</button>
+<button type="button" id="btnClear" class="btn btn-primary">Clear</button>
 
 
-<table class="table compact" id="tblEmpAllowances">
+<table class="table" id="tblEmpAllowances">
     <thead id="tblEmpAllowancesHead">
-    <tr>
-        <th>Item Name</th>
-        <th>Item Type</th>
-        <th>Item Class</th>
-        <th>Allowance Available</th>
-        <th>Supplier</th>
-        <th>Order</th>
-        <th class="no-sort col-width-100"></th>
-    </tr>
+        <tr>
+            <th>Ingredient</th>
+            <th>Amount (grams)</th>
+            <th>Percentage of Ingredients</th>
+            <th>Total Cost (CAD$)</th>
+            <th>Total Fat (grams)</th>
+            <th>Total Fibre (grams)</th>
+            <th>Total Sugar (grams)</th>
+            <th>Total Protein (grams)</th>
+            <th>Total Carbs</th>
+            <th class="no-sort col-width-100"></th>
+        </tr>
     </thead>
-    <!--            <tbody id="tblEmpAllowancesBody">-->
     <tbody>
+        <tr>
+            <td><button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Select ingredient</button>
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="dropdownValues">
+<!--                <a class="dropdown-item" href="#">Action</a>-->
+            </ul></td>
+        </tr>
     </tbody>
 </table>
 
@@ -60,6 +69,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 
 <!--        <div class="quantity-button">-->
 <!--            <button type="button" class="btn btn-danger">Danger</button>-->
