@@ -8,7 +8,7 @@ const sqlConfig = {
     database: process.env.DB_DBNAME,
     options: {encrypt: false}
 };
-console.log(sqlConfig);
+// console.log(sqlConfig);
 const poolPromise = new sql.createPool(sqlConfig)
     .getConnection()
     .then(pool => {
