@@ -40,18 +40,10 @@ function updateCont(row, drop, ingred, id) {
 
             drop.text(`${ingred}`);
             //TODO: Makes these two cells change
-            row.cells[2].innerText = "100";
-            row.cells[3].innerText = "0";
-
-            // row.cells[4].innerText = recipeDict[id]["nutrientData"]["fat_cont"];
-            // row.cells[5].innerText = recipeDict[id]["nutrientData"]["fibre_cont"];
-            // row.cells[6].innerText = recipeDict[id]["nutrientData"]["sugr_cont"];
-            // row.cells[7].innerText = recipeDict[id]["nutrientData"]["prot_cont"];
-            // row.cells[8].innerText = recipeDict[id]["nutrientData"]["carb_cont"];
+            // row.cells[2].innerText = "100";
+            // row.cells[3].innerText = "0";
 
         });
-
-
 }
 
 function deleteRow(row, id) {
@@ -93,7 +85,6 @@ function ingredRow() {
     });
 
     // Add input listener for ingredient amount field
-    //amntCell.addEventListener('input', function(){updateAmnt(newRow, $(this).children()[0].children[0].id, $(this).children()[0].children[0].value)});
     amntCell.addEventListener('input', function () {
         updateAmnt(newRow, parseInt($(this).children()[0].children[0].id.split("_")[1]), $(this).children()[0].children[0].value)
     });
@@ -102,6 +93,9 @@ function ingredRow() {
     $(`#remove_${idVal}`).on('click', function () {
         deleteRow(newRow, parseInt($(this)[0].id.split("_")[1]))
     });
+
+    //TODO: Make percentages update when sample amount is adjusted
+    $(`#sample-amount-form`).on('input', function(){sampleAmount = parseInt($(this)[0].value)});
 
 }
 
@@ -114,6 +108,6 @@ $(document).ready(function () {
             ingredRow();
         })
 
-    $('#btnSave').on("click", ingredRow);
+    $('#btnAdd').on("click", ingredRow);
 
 })
