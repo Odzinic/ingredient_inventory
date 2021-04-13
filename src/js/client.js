@@ -1,11 +1,11 @@
 let tblIngredients = document.getElementById("tblEmpAllowances").getElementsByTagName('tbody')[0];
-let ingredLst="";
+let ingredLst = "";
 let recipeDict = {};
-let idVal =  0;
+let idVal = 0;
 let sampleAmount = 30;
 
 // Nutrient data in database is in gram/kilogram
-function updateAmnt(row, id, amount){
+function updateAmnt(row, id, amount) {
     let nutrValues = recipeDict[id]["nutrientData"];
 
     // Update ingredient amount
@@ -27,43 +27,41 @@ function updateAmnt(row, id, amount){
     row.cells[8].innerText = recipeDict[id]["recipeValues"]["carb_cont"].toFixed(2);
 }
 
-function updateCont(row, drop, ingred, id){
+function updateCont(row, drop, ingred, id) {
     $.ajax(`/api/values?ingred=${ingred}`)
-        .done(function (data){
+        .done(function (data) {
             // Add ingredient amount (1) and ingredient nutrient values (data[0])
             // recipeDict[id]= [1, data[0]];
 
             // amount: the amount of the ingredient in grams
-            // nutrientData: JSON of ingredient nutrient data from database
+            // nutrientData: JSON of ingredient nutrient data from database. Must be parsed to make a copy.
             // recipeValues: copy of nutrientData that will be manipulated based off entered amount
-            recipeDict[id]= {"amount":1, "nutrientData":data[0], "recipeValues":data[0]};
+            recipeDict[id] = {"amount": 1, "nutrientData": JSON.parse(JSON.stringify(data[0])), "recipeValues": data[0]};
 
             drop.text(`${ingred}`);
             //TODO: Makes these two cells change
             row.cells[2].innerText = "100";
             row.cells[3].innerText = "0";
 
-            row.cells[4].innerText = recipeDict[id]["nutrientData"]["fat_cont"];
-            row.cells[5].innerText = recipeDict[id]["nutrientData"]["fibre_cont"];
-            row.cells[6].innerText = recipeDict[id]["nutrientData"]["sugr_cont"];
-            row.cells[7].innerText = recipeDict[id]["nutrientData"]["prot_cont"];
-            row.cells[8].innerText = recipeDict[id]["nutrientData"]["carb_cont"];
+            // row.cells[4].innerText = recipeDict[id]["nutrientData"]["fat_cont"];
+            // row.cells[5].innerText = recipeDict[id]["nutrientData"]["fibre_cont"];
+            // row.cells[6].innerText = recipeDict[id]["nutrientData"]["sugr_cont"];
+            // row.cells[7].innerText = recipeDict[id]["nutrientData"]["prot_cont"];
+            // row.cells[8].innerText = recipeDict[id]["nutrientData"]["carb_cont"];
 
-    });
-
+        });
 
 
 }
 
-function deleteRow(row, id){
+function deleteRow(row, id) {
     row.remove();
 
-    let dictIndex = parseInt(id.split("_")[1]);
-    delete recipeDict[dictIndex];
+    delete recipeDict[id];
 
 }
 
-function ingredRow(){
+function ingredRow() {
     idVal++;
 
     // Add a new ingredient row
@@ -90,14 +88,20 @@ function ingredRow(){
     // Add listeners to bootstrap cells //
 
     // Add on click listener to dropdown menus for selecting ingredient
-    $(`#dropdown_${idVal} li`).on('click', function(){updateCont(newRow, $(this).parent().prev(), $(this).text(), idVal)});
+    $(`#dropdown_${idVal} li`).on('click', function () {
+        updateCont(newRow, $(this).parent().prev(), $(this).text(), $(this).parent()[0].id.split("_")[1])
+    });
 
     // Add input listener for ingredient amount field
     //amntCell.addEventListener('input', function(){updateAmnt(newRow, $(this).children()[0].children[0].id, $(this).children()[0].children[0].value)});
-    amntCell.addEventListener('input', function(){updateAmnt(newRow, idVal, $(this).children()[0].children[0].value)});
+    amntCell.addEventListener('input', function () {
+        updateAmnt(newRow, parseInt($(this).children()[0].children[0].id.split("_")[1]), $(this).children()[0].children[0].value)
+    });
 
     // Add on click listener for remove row button
-    $(`#remove_${idVal}`).on('click', function(){deleteRow(newRow, $(this)[0].id)});
+    $(`#remove_${idVal}`).on('click', function () {
+        deleteRow(newRow, parseInt($(this)[0].id.split("_")[1]))
+    });
 
 }
 
