@@ -99,6 +99,32 @@ function ingredRow() {
 
 }
 
+function saveRecipe(){
+    $('#cart').modal("show")
+    $('#modalSave').on("click", function(){
+        if ($('#modalRecipName').children()[1].value != ""){
+            console.log("Submitting");
+            let recname = $('#modalRecipName').children()[1].value;
+            $.ajax({
+                type: 'POST',
+                url: 'api/recipes/',
+                json: true,
+                data: {recipName: recname, recipData: JSON.stringify(recipeDict)},
+                success: function(){
+                    console.log("Saving recipe");
+                },
+                error: (function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                })
+        });
+        }
+        else{
+            alert("Please enter a recipe name first.");
+        }
+
+    })
+}
+
 $(document).ready(function () {
     $.ajax("/api/ingredients/")
         .done(function (data) {
@@ -109,5 +135,6 @@ $(document).ready(function () {
         })
 
     $('#btnAdd').on("click", ingredRow);
+    $("#btnSave").on("click", saveRecipe);
 
 })

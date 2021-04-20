@@ -40,4 +40,23 @@ router.get('/api/values/', async(req, res) => {
 
 })
 
+// Save recipes to database
+router.post('/api/recipes/', async(req, res) => {
+
+    let recipeName = req.body.recipName;
+    let recipData = req.body.recipData;
+
+    let statement = `INSERT INTO ingredient_db.Recipes (RecipeName, RecipeData, LastModified) VALUES ("${recipeName}", '${recipData}', "${new Date().toISOString().slice(0, 19).replace('T', ' ')}");`;
+
+    try {
+        let pool = await dbPool;
+        let result = await pool.query(statement);
+        res.status(200).send(result);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+        
+
+})
+
 module.exports = router;
