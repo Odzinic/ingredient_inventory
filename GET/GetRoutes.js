@@ -41,7 +41,7 @@ router.get('/api/values/', async(req, res) => {
 })
 
 // Save recipes to database
-router.post('/api/recipes/', async(req, res) => {
+router.post('/api/saverecipes/', async(req, res) => {
 
     let recipeName = req.body.recipName;
     let recipData = req.body.recipData;
@@ -56,6 +56,20 @@ router.post('/api/recipes/', async(req, res) => {
         res.status(500).send(err);
     }
         
+
+})
+
+router.get('/api/loadrecipes/', async(req, res) => {
+
+    let statement = "SELECT RecipeID, RecipeName, LastModified FROM ingredient_db.Recipes";
+
+    try {
+        let pool = await dbPool;
+        let result = await pool.query(statement);
+        res.status(200).send(result);
+    } catch (err) {
+        res.status(500).send(err);
+    }
 
 })
 

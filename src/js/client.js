@@ -107,7 +107,7 @@ function saveRecipe(){
             let recname = $('#modalRecipName').children()[1].value;
             $.ajax({
                 type: 'POST',
-                url: 'api/recipes/',
+                url: 'api/saverecipes/',
                 json: true,
                 data: {recipName: recname, recipData: JSON.stringify(recipeDict)},
                 success: function(){
@@ -125,6 +125,23 @@ function saveRecipe(){
     })
 }
 
+function loadRecipe(){
+    $.ajax({
+        type: 'GET',
+        url: '/api/loadrecipes/',
+        success: function(data){
+            for (let i=0; i<data.length; i++){
+                let loadRow = document.getElementById("loadrecipeTable").insertRow(-1);
+                loadRow.insertCell(0).append(`${data[i]["RecipeName"]}`);
+                loadRow.insertCell(1).append(`${data[i]["LastModified"]}`);
+            }
+        }
+    })
+
+
+    $('#loadrecipeModal').modal("show");
+}
+
 $(document).ready(function () {
     $.ajax("/api/ingredients/")
         .done(function (data) {
@@ -136,5 +153,6 @@ $(document).ready(function () {
 
     $('#btnAdd').on("click", ingredRow);
     $("#btnSave").on("click", saveRecipe);
+    $('#btnLoad').on("click", loadRecipe);
 
 })
