@@ -127,6 +127,7 @@ function saveRecipe(){
                 data: {recipName: recname, recipData: JSON.stringify(recipeDict)},
                 success: function(){
                     console.log("Saving recipe");
+                    $('#cart').modal("hide")
                 },
                 error: (function (jqXHR, textStatus, errorThrown) {
                     console.log(jqXHR);
@@ -173,6 +174,7 @@ function loadRecipe(id){
                 currAmount.setAttribute('value', amount);
 
             }
+            $('#loadrecipeModal').modal("hide");
         }
     })
 
