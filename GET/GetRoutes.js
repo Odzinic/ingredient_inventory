@@ -60,17 +60,29 @@ router.post('/api/saverecipes/', async(req, res) => {
 })
 
 router.get('/api/loadrecipes/', async(req, res) => {
+    if (req.query.loadList === 'true'){
+        let statement = "SELECT RecipeID, RecipeName, LastModified FROM ingredient_db.Recipes";
 
-    let statement = "SELECT RecipeID, RecipeName, LastModified FROM ingredient_db.Recipes";
+        try {
+            let pool = await dbPool;
+            let result = await pool.query(statement);
+            res.status(200).send(result);
+        } catch (err) {
+            res.status(500).send(err);
+        }}
 
-    try {
-        let pool = await dbPool;
-        let result = await pool.query(statement);
-        res.status(200).send(result);
-    } catch (err) {
-        res.status(500).send(err);
-    }
+    else if (req.query.loadList === 'false'){
 
-})
+        let recID = req.query.id;
+        let statement = `SELECT RecipeData FROM ingredient_db.Recipes WHERE RecipeID = ${recID}`;
+
+        try {
+            let pool = await dbPool;
+            let result = await pool.query(statement);
+            res.status(200).send(result);
+        } catch (err) {
+            res.status(500).send(err);
+        }}
+    })
 
 module.exports = router;

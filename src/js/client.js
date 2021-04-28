@@ -27,29 +27,44 @@ function updateAmnt(row, id, amount) {
     row.cells[8].innerText = recipeDict[id]["recipeValues"]["carb_cont"].toFixed(2);
 }
 
-function updateCont(row, drop, ingred, id) {
-    $.ajax(`/api/values?ingred=${ingred}`)
-        .done(function (data) {
-            // Add ingredient amount (1) and ingredient nutrient values (data[0])
-            // recipeDict[id]= [1, data[0]];
+function updateCont(row, drop, ingred, id = null) {
 
-            // amount: the amount of the ingredient in grams
-            // nutrientData: JSON of ingredient nutrient data from database. Must be parsed to make a copy.
-            // recipeValues: copy of nutrientData that will be manipulated based off entered amount
-            recipeDict[id] = {"amount": 1, "nutrientData": JSON.parse(JSON.stringify(data[0])), "recipeValues": data[0]};
+    // If loading from save, skip retrieval
+    if (id == null){
+        drop.text(`${ingred}`);
+    }
+    else{
+        $.ajax(`/api/values?ingred=${ingred}`)
+            .done(function (data) {
+                // Add ingredient amount (1) and ingredient nutrient values (data[0])
+                // recipeDict[id]= [1, data[0]];
 
-            drop.text(`${ingred}`);
-            //TODO: Makes these two cells change
-            // row.cells[2].innerText = "100";
-            // row.cells[3].innerText = "0";
+                // amount: the amount of the ingredient in grams
+                // nutrientData: JSON of ingredient nutrient data from database. Must be parsed to make a copy.
+                // recipeValues: copy of nutrientData that will be manipulated based off entered amount
+                recipeDict[id] = {"amount": 1, "nutrientData": JSON.parse(JSON.stringify(data[0])), "recipeValues": data[0], "ingredient":ingred};
 
-        });
+                drop.text(`${ingred}`);
+                //TODO: Makes these two cells change
+                // row.cells[2].innerText = "100";
+                // row.cells[3].innerText = "0";
+
+            });
+    }
+
 }
 
-function deleteRow(row, id) {
-    row.remove();
+function deleteRow(row, id = null) {
 
-    delete recipeDict[id];
+    if (id == null){
+        row.remove();
+    }
+
+    else{
+        row.remove();
+
+        delete recipeDict[id];
+}
 
 }
 
@@ -125,21 +140,62 @@ function saveRecipe(){
     })
 }
 
-function loadRecipe(){
+function loadRecipe(id){
+    idVal = 0;
+    let recID = id.split("_")[1];
+
+    // Delete existing rows before loading
+    for (let i = 0;i < tblIngredients.rows.length; i++){
+        deleteRow(tblIngredients.rows[i]);
+    }
+
     $.ajax({
         type: 'GET',
         url: '/api/loadrecipes/',
+        data: {loadList: false, id: recID},
+        success: function(data){
+            recipeDict = JSON.parse(data[0]["RecipeData"]);
+
+            // Iterate through all of the ingredients in the recipe
+            for (let i=0;i<Object.keys(recipeDict).length;i++){
+                let ingredient = recipeDict[Object.keys(recipeDict)[i]]["ingredient"];
+                let amount = recipeDict[Object.keys(recipeDict)[i]]["amount"];
+
+                // Create row to load ingredient data into
+                ingredRow();
+                let currRow = tblIngredients.rows[i];
+                let currDrop = currRow.cells[0].children[0];
+                let currAmount = currRow.cells[1].children[0].children[0];
+
+                // Update the row to have the appropriate ingredient name and saved amounts
+                currDrop.textContent = ingredient;
+                updateAmnt(currRow, idVal, amount);
+                currAmount.setAttribute('value', amount);
+
+            }
+        }
+    })
+
+}
+
+function recipePopup(){
+    $.ajax({
+        type: 'GET',
+        url: '/api/loadrecipes/',
+        data: {loadList: true},
         success: function(data){
             for (let i=0; i<data.length; i++){
                 let loadRow = document.getElementById("loadrecipeTable").insertRow(-1);
                 loadRow.insertCell(0).append(`${data[i]["RecipeName"]}`);
                 loadRow.insertCell(1).append(`${data[i]["LastModified"]}`);
+                $(loadRow.insertCell(2)).append(`<button class="btn btn-success" id="load_${data[i]["RecipeID"]}">Load</button>`)
+                    .on("click", function(){loadRecipe($(this).children()[0].id)});
             }
         }
     })
 
-
     $('#loadrecipeModal').modal("show");
+    $('#loadrecipeTable').empty();
 }
 
 $(document).ready(function () {
@@ -153,6 +209,6 @@ $(document).ready(function () {
 
     $('#btnAdd').on("click", ingredRow);
     $("#btnSave").on("click", saveRecipe);
-    $('#btnLoad').on("click", loadRecipe);
+    $('#btnLoad').on("click", recipePopup);
 
 })
