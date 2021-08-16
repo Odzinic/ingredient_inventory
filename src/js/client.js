@@ -18,6 +18,8 @@ function updateAmnt(row, id, amount) {
     recipeDict[id]["recipeValues"]["prot_cont"] = nutrValues["prot_cont"] * (amount / 1000);
     recipeDict[id]["recipeValues"]["carb_cont"] = nutrValues["carb_cont"] * (amount / 1000);
 
+    subTotals(0, parseFloat(row.cells[4].innerText), parseFloat(row.cells[5].innerText), parseFloat(row.cells[6].innerText), parseFloat(row.cells[7].innerText), parseFloat(row.cells[8].innerText));
+
     // Update the page cells
     row.cells[2].innerText = ((amount / sampleAmount) * 100).toFixed(2);
     row.cells[4].innerText = recipeDict[id]["recipeValues"]["fat_cont"].toFixed(2);
@@ -25,6 +27,8 @@ function updateAmnt(row, id, amount) {
     row.cells[6].innerText = recipeDict[id]["recipeValues"]["sugr_cont"].toFixed(2);
     row.cells[7].innerText = recipeDict[id]["recipeValues"]["prot_cont"].toFixed(2);
     row.cells[8].innerText = recipeDict[id]["recipeValues"]["carb_cont"].toFixed(2);
+
+    addTotals(0, parseFloat(row.cells[4].innerText), parseFloat(row.cells[5].innerText), parseFloat(row.cells[6].innerText), parseFloat(row.cells[7].innerText), parseFloat(row.cells[8].innerText));
 }
 
 function updateCont(row, drop, ingred, id = null) {
@@ -198,6 +202,64 @@ function recipePopup(){
 
     $('#loadrecipeModal').modal("show");
     $('#loadrecipeTable').empty();
+}
+
+function addTotals(itemCost, itemFat, itemFibre, itemSugar, itemProt, itemCarb){
+    let totalRow = $('#tblTotals').children();
+
+    // Cost cell
+    if (isNaN(itemCost)){}
+    else totalRow[3].innerText = (parseFloat(totalRow[3].innerText) + itemCost).toFixed(2);
+
+    // Fat cell
+    if (isNaN(itemFat)){}
+    else totalRow[4].innerText = (parseFloat(totalRow[4].innerText) + itemFat).toFixed(2);
+
+    // Fibre cell
+    if (isNaN(itemFibre)){}
+    else totalRow[5].innerText = (parseFloat(totalRow[5].innerText) + itemFibre).toFixed(2);
+
+    if (isNaN(itemSugar)){}
+    // Sugar cell
+    else totalRow[6].innerText = (parseFloat(totalRow[6].innerText) + itemSugar).toFixed(2);
+
+    if (isNaN(itemProt)){}
+    // Protein cell
+    else totalRow[7].innerText = (parseFloat(totalRow[7].innerText) + itemProt).toFixed(2);
+
+    if (isNaN(itemCarb)){}
+    // Carbs cell
+    else totalRow[8].innerText = (parseFloat(totalRow[8].innerText) + itemCarb).toFixed(2);
+
+}
+
+function subTotals(itemCost, itemFat, itemFibre, itemSugar, itemProt, itemCarb){
+    let totalRow = $('#tblTotals').children();
+
+    // Cost cell
+    if (isNaN(itemCost)){}
+    else totalRow[3].innerText = (parseFloat(totalRow[3].innerText) - itemCost).toFixed(2);
+
+    // Fat cell
+    if (isNaN(itemFat)){}
+    else totalRow[4].innerText = (parseFloat(totalRow[4].innerText) - itemFat).toFixed(2);
+
+    // Fibre cell
+    if (isNaN(itemFibre)){}
+    else totalRow[5].innerText = (parseFloat(totalRow[5].innerText) - itemFibre).toFixed(2);
+
+    if (isNaN(itemSugar)){}
+    // Sugar cell
+    else totalRow[6].innerText = (parseFloat(totalRow[6].innerText) - itemSugar).toFixed(2);
+
+    if (isNaN(itemProt)){}
+    // Protein cell
+    else totalRow[7].innerText = (parseFloat(totalRow[7].innerText) - itemProt).toFixed(2);
+
+    if (isNaN(itemCarb)){}
+    // Carbs cell
+    else totalRow[8].innerText = (parseFloat(totalRow[8].innerText) - itemCarb).toFixed(2);
+
 }
 
 $(document).ready(function () {
