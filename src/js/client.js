@@ -12,11 +12,11 @@ function updateAmnt(row, id, amount) {
     recipeDict[id]["amount"] = amount;
 
     // Update ingredient nutrient values
-    recipeDict[id]["recipeValues"]["fat_cont"] = nutrValues["fat_cont"] * (amount / 1000);
-    recipeDict[id]["recipeValues"]["fibre_cont"] = nutrValues["fibre_cont"] * (amount / 1000);
-    recipeDict[id]["recipeValues"]["sugr_cont"] = nutrValues["sugr_cont"] * (amount / 1000);
-    recipeDict[id]["recipeValues"]["prot_cont"] = nutrValues["prot_cont"] * (amount / 1000);
-    recipeDict[id]["recipeValues"]["carb_cont"] = nutrValues["carb_cont"] * (amount / 1000);
+    recipeDict[id]["recipeValues"]["fat_cont"] = nutrValues["fat_cont"] * (amount / 100);
+    recipeDict[id]["recipeValues"]["fibre_cont"] = nutrValues["fibre_cont"] * (amount / 100);
+    recipeDict[id]["recipeValues"]["sugr_cont"] = nutrValues["sugr_cont"] * (amount / 100);
+    recipeDict[id]["recipeValues"]["prot_cont"] = nutrValues["prot_cont"] * (amount / 100);
+    recipeDict[id]["recipeValues"]["carb_cont"] = nutrValues["carb_cont"] * (amount / 100);
 
     subTotals(0, parseFloat(row.cells[4].innerText), parseFloat(row.cells[5].innerText), parseFloat(row.cells[6].innerText), parseFloat(row.cells[7].innerText), parseFloat(row.cells[8].innerText));
 
