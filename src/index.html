@@ -12,18 +12,18 @@
 <button type="button" id="btnSave" class="btn btn-success">Save Recipe</button>
 <button type="button" id="btnLoad" class="btn btn-primary float-right mr-2">Load Recipe</button>
 
-<table class="table" id="tblEmpAllowances">
+<table class="table table-hover" id="tblEmpAllowances">
     <thead id="tblEmpAllowancesHead">
-    <tr>
+    <tr class="sticky-top" style="background-color:white;z-index: 0">
         <th>Ingredient</th>
         <th>Amount (grams)</th>
         <th>Percentage of Ingredients</th>
-        <th>Total Cost (CAD$)</th>
-        <th>Total Fat (grams)</th>
-        <th>Total Fibre (grams)</th>
-        <th>Total Sugar (grams)</th>
-        <th>Total Protein (grams)</th>
-        <th>Total Carbs (grams)</th>
+        <th>Cost (USD)</th>
+        <th>Fat (grams)</th>
+        <th>Fibre (grams)</th>
+        <th>Sugar (grams)</th>
+        <th>Protein (grams)</th>
+        <th>Carbs (grams)</th>
         <th class="no-sort col-width-100"></th>
     </tr>
     </thead>
@@ -31,18 +31,32 @@
 
 
     </tbody>
-    <tr id="tblTotals">
-        <th>Totals</th>
-        <th></th>
-        <th></th>
-        <th>0</th>
-        <th>0</th>
-        <th>0</th>
-        <th>0</th>
-        <th>0</th>
-        <th>0</th>
-        <th class="no-sort col-width-100"></th>
-    </tr>
+    <table class="table table-sm fixed-bottom" style="background-color:whitesmoke">
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Price</th>
+            <th>Fat</th>
+            <th>Fibre</th>
+            <th>Sugar</th>
+            <th>Protein</th>
+            <th>Carbs</th>
+            <th class="no-sort col-width-100"></th>
+        </tr>
+        <tr id="tblTotals"  style="background-color:whitesmoke">
+            <th>Totals</th>
+            <th></th>
+            <th></th>
+            <th>0</th>
+            <th>0</th>
+            <th>0</th>
+            <th>0</th>
+            <th>0</th>
+            <th>0</th>
+            <th class="no-sort col-width-100"></th>
+        </tr>
+    </table>
 </table>
 </div>
 

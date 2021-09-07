@@ -17,18 +17,20 @@ function updateAmnt(row, id, amount) {
     recipeDict[id]["recipeValues"]["sugr_cont"] = nutrValues["sugr_cont"] * (amount / 100);
     recipeDict[id]["recipeValues"]["prot_cont"] = nutrValues["prot_cont"] * (amount / 100);
     recipeDict[id]["recipeValues"]["carb_cont"] = nutrValues["carb_cont"] * (amount / 100);
+    recipeDict[id]["recipeValues"]["cost"] = nutrValues["cost"] * (amount / 100) //todo: insure the cost math is correct
 
-    subTotals(0, parseFloat(row.cells[4].innerText), parseFloat(row.cells[5].innerText), parseFloat(row.cells[6].innerText), parseFloat(row.cells[7].innerText), parseFloat(row.cells[8].innerText));
+    subTotals(parseFloat(row.cells[3].innerText), parseFloat(row.cells[4].innerText), parseFloat(row.cells[5].innerText), parseFloat(row.cells[6].innerText), parseFloat(row.cells[7].innerText), parseFloat(row.cells[8].innerText));
 
     // Update the page cells
     row.cells[2].innerText = ((amount / sampleAmount) * 100).toFixed(2);
+    row.cells[3].innerText = recipeDict[id]["recipeValues"]["cost"].toFixed(2);
     row.cells[4].innerText = recipeDict[id]["recipeValues"]["fat_cont"].toFixed(2);
     row.cells[5].innerText = recipeDict[id]["recipeValues"]["fibre_cont"].toFixed(2);
     row.cells[6].innerText = recipeDict[id]["recipeValues"]["sugr_cont"].toFixed(2);
     row.cells[7].innerText = recipeDict[id]["recipeValues"]["prot_cont"].toFixed(2);
     row.cells[8].innerText = recipeDict[id]["recipeValues"]["carb_cont"].toFixed(2);
 
-    addTotals(0, parseFloat(row.cells[4].innerText), parseFloat(row.cells[5].innerText), parseFloat(row.cells[6].innerText), parseFloat(row.cells[7].innerText), parseFloat(row.cells[8].innerText));
+    addTotals(parseFloat(row.cells[3].innerText), parseFloat(row.cells[4].innerText), parseFloat(row.cells[5].innerText), parseFloat(row.cells[6].innerText), parseFloat(row.cells[7].innerText), parseFloat(row.cells[8].innerText));
 }
 
 function updateCont(row, drop, ingred, id = null) {
@@ -67,6 +69,8 @@ function deleteRow(row, id = null) {
     else{
         row.remove();
 
+
+        subTotals(recipeDict[id]["recipeValues"]["cost"], recipeDict[id]["recipeValues"]["fat_cont"], recipeDict[id]["recipeValues"]["fibre_cont"],recipeDict[id]["recipeValues"]["sugr_cont"],recipeDict[id]["recipeValues"]["prot_cont"],recipeDict[id]["recipeValues"]["carb_cont"]);
         delete recipeDict[id];
 }
 
@@ -91,7 +95,7 @@ function ingredRow() {
     let removeCell = newRow.insertCell(9);
 
     // Add bootstrap to cells
-    $(dropdownCell).append(`<button class="btn btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select Ingredients</button><ul class="dropdown-menu" id="dropdown_${idVal}" aria-labelledby="dropdownMenuButton"">${ingredLst}</ul>`);
+    $(dropdownCell).append(`<button class="btn btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select Ingredients</button><ul class="dropdown-menu"  id="dropdown_${idVal}" aria-labelledby="dropdownMenuButton"">${ingredLst}</ul>`);
     $(amntCell).append(`<div><input type="number" class="form-control" id="amnt_${idVal}" placeholder="Enter amount"></div>`);
     $(removeCell).append(`<button type="button" class="btn btn-danger" id="remove_${idVal}">Remove</button>`);
 
@@ -148,6 +152,7 @@ function saveRecipe(){
 function loadRecipe(id){
     idVal = 0;
     let recID = id.split("_")[1];
+    console.log(recID)
 
     // Delete existing rows before loading
     for (let i = 0;i < tblIngredients.rows.length; i++){
@@ -160,11 +165,15 @@ function loadRecipe(id){
         data: {loadList: false, id: recID},
         success: function(data){
             recipeDict = JSON.parse(data[0]["RecipeData"]);
+            i = 0;
 
             // Iterate through all of the ingredients in the recipe
-            for (let i=0;i<Object.keys(recipeDict).length;i++){
-                let ingredient = recipeDict[Object.keys(recipeDict)[i]]["ingredient"];
-                let amount = recipeDict[Object.keys(recipeDict)[i]]["amount"];
+            // Key is the key in the dict
+            // i is used to specify the row being populated in the table
+            for (var key in recipeDict){
+                let ingredient = recipeDict[key]["ingredient"];
+                let amount = recipeDict[key]["amount"];
+
 
                 // Create row to load ingredient data into
                 ingredRow();
@@ -174,8 +183,10 @@ function loadRecipe(id){
 
                 // Update the row to have the appropriate ingredient name and saved amounts
                 currDrop.textContent = ingredient;
-                updateAmnt(currRow, idVal, amount);
+                updateAmnt(currRow, key, amount);
                 currAmount.setAttribute('value', amount);
+
+                i++;
 
             }
             $('#loadrecipeModal').modal("hide");

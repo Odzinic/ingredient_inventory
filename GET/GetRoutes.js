@@ -27,7 +27,7 @@ router.get('/api/values/', async(req, res) => {
     else{
         let ingredReq = req.query.ingred;
 
-        let statement = `SELECT fat_cont, fibre_cont, sugr_cont, prot_cont, carb_cont FROM ingredient_db.Ingredients WHERE ingred_name = "${ingredReq}"`;
+        let statement = `SELECT fat_cont, fibre_cont, sugr_cont, prot_cont, carb_cont, cost FROM ingredient_db.Ingredients WHERE ingred_name = "${ingredReq}"`;
 
         try {
             let pool = await dbPool;
